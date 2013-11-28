@@ -6,10 +6,10 @@ version := "0.7.0-SNAPSHOT"
 
 publishMavenStyle := true
 
-crossScalaVersions := Seq("2.9.1", "2.9.2", "2.9.3", "2.10.3")
+crossScalaVersions := Seq("2.9.1", "2.9.2", "2.9.3", "2.10.3", "2.11.0-M7")
 
 scalacOptions <++= scalaVersion map { v =>
-  if (v.startsWith("2.10"))
+  if (v.startsWith("2.10") || v.startsWith("2.11"))
     Seq("-unchecked", "-deprecation", "-feature", "-language:implicitConversions")
   else
     Seq("-unchecked", "-deprecation")
@@ -46,8 +46,10 @@ libraryDependencies <<= (scalaVersion, libraryDependencies) {(version, dependenc
 unmanagedSourceDirectories in Compile <+= (scalaVersion, sourceDirectory in Compile){(v, dir) =>
   if(v.startsWith("2.9"))
     dir / "scala29"
-  else
+  else if (v.startsWith("2.10"))
     dir / "scala210"
+  else
+    dir / "scala211"
 }
 
 initialCommands in console += {
